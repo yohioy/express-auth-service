@@ -1,0 +1,10 @@
+
+HOST=0.0.0.0
+PORT=4022
+API_AUTH_KEY=ABCXYZ
+
+############
+## Cognito
+COGNITO_USER_POOL_ID=eu-west-1_vNRBVWzxc
+COGNITO_CLIENT_ID=4f3fa651j1r0csnedktjlklv7i
+COGNITO_REGION=eu-west-1
