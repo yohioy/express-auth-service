@@ -1,47 +1,76 @@
-import { Request, Response } from 'express';
-import config from 'config';
-import { Cognito } from '@masteryo/masteryo-cognito';
+import { Response } from 'express';
 import { responseType } from '@masteryo/masteryo-utils';
-
-
-type TCognitoConfig = {
-    user_pool_id: string;
-    client_id: string;
-}
 
 class AuthController {
 
-    async signin(req, res: Response) {
+    async authenticate(req, res: Response, next) {
 
-        const db = req.dbConnection;
-
+        const cognito = req.cognitoInstance;
         const payload = req.body;
-        const cognitoConfig: TCognitoConfig = config.get('Cognito');
 
-        const cognitoOptions = {
-            UserPoolId: cognitoConfig.user_pool_id,
-            ClientId: cognitoConfig.client_id
+        const email = payload.email;
+        const password = payload.password;
+
+        let response;
+        try {
+            response = await cognito.authenticateUser(email, password);
+            req.auth = { cognitoId: response.sub, accessToken: response.accessToken };
+            next();
+        } catch (e) {
+            console.log(e);
+            res.status(404).send(responseType.failed);
+        }
+    }
+
+    async signUp(req, res: Response, next) {
+
+        const cognito = req.cognitoInstance;
+        const payload = req.body;
+
+        const email = payload.email;
+        const password = payload.password;
+        const firstName = payload.firstName;
+        const lastName = payload.lastName;
+
+        const cognitoUserAttributes = {
+            given_name: firstName,
+            family_name: lastName,
+            email: email,
         };
 
-        const cognito = new Cognito(cognitoOptions);
-
-        let authUserResponse;
+        // Add user to Cognito
+        let response;
         try {
-            authUserResponse = await cognito.authenticateUser(payload.email, payload.password);
+            response = await cognito.signup(email, password, cognitoUserAttributes);
+            req.auth = { cognitoId: response.userSub };
+            next();
         } catch (e) {
-            console.log(responseType.failed, e);
-            res.send(responseType.failed);
+            console.log(e);
+            res.status(404).send(responseType.failed);
         }
-
-        //@todo check user in table
-
-        console.log(authUserResponse);
-        res.send(responseType.success);
     }
 
 
+    async verifySignUp (req, res: Response, next) {
+
+        const payload = req.body;
+
+        const code = payload.code;
+        const email = payload.email;
+
+        const cognito = req.cognitoInstance;
+
+        // Confirm Registration
+        try {
+            await cognito.confirmRegistration(code, email);
+            next();
+        } catch (e) {
+            console.log(e);
+            res.status(404).send(responseType.failed);
+        }
+
+    }
 
 }
 
-
-export default AuthController;
+export default new AuthController();

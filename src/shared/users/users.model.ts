@@ -1,27 +1,27 @@
-import {Entity, PrimaryColumn, Column} from "typeorm";
+import { Entity, ObjectID, ObjectIdColumn, Column } from "typeorm";
 
 @Entity('users')
 export class UsersModel {
 
-    @PrimaryColumn()
-    id: string | undefined;
+    @ObjectIdColumn()
+    id: ObjectID;
 
     @Column()
-    firstName: string | undefined;
+    firstName: string;
 
     @Column()
-    userStatus: string | undefined;
+    userStatus: string;
 
     @Column()
-    group: string | undefined;
+    group: string;
 
     @Column()
-    createdDate: number | undefined;
+    createdDate: number;
 
     @Column()
-    modifiedDate: number | undefined;
+    modifiedDate: number;
 
     @Column()
-    verificationStatus: string | undefined;
+    verificationStatus: string;
 
 }
