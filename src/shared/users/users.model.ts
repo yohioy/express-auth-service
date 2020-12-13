@@ -7,6 +7,9 @@ export class UsersModel {
     id: ObjectID;
 
     @Column()
+    cognitoId: string;
+
+    @Column()
     firstName: string;
 
     @Column()

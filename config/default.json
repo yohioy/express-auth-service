@@ -1,8 +1,11 @@
 {
   "App": {
     "host": "0.0.0.0",
-    "port": "5022",
-    "api_auth_key": "ABCXYZ"
+    "port": "5022"
+  },
+  "TokenConfig": {
+    "token_secret_key": "2pyS5u+fS1<P&GF",
+    "token_salt": "z{Puwa6iqQVaC*"
   },
   "Cognito": {
     "user_pool_id": "eu-west-1_E3otEFdhI",

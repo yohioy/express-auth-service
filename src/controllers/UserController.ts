@@ -29,36 +29,6 @@ class UserController {
     }
 
 
-    async signUp(req, res: Response) {
-
-        const options = { dbManager: req.dbManager };
-
-        const cognitoId = req.auth.cognitoId;
-
-        const payload = req.body;
-
-        const data = {
-            cognitoId: cognitoId,
-            firstName: payload.firstName,
-            lastName: payload.lastName,
-            userStatus: '1',
-            group: 'admin',
-            createdDate: Date.now(),
-            modifiedDate: Date.now(),
-            verificationStatus: 'UNCONFIRMED'
-        };
-
-        let user = new Users(options);
-
-        try {
-            await user.create(data);
-            res.status(200).send(responseType.success)
-        } catch (e) {
-            console.log(e);
-            res.status(401).send(responseType.failed);
-        }
-    }
-
 
     async confirmVerification(req, res: Response) {
 

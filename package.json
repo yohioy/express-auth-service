@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@masteryo/masteryo-cognito": "^1.0.0",
+    "@masteryo/masteryo-token-generator": "^1.0.5",
     "@masteryo/masteryo-utils": "^1.0.3",
     "amazon-cognito-identity-js": "^4.5.0",
     "aws-sdk": "^2.775.0",

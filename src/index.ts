@@ -37,11 +37,7 @@ app.use(bodyParser.json({limit: '10kb'}));
 app.use(Db([UsersModel]));
 app.use(CognitoInit());
 
-app.use('/auth/', routes);
-
-app.get('/', (req, res) => {
-    res.send('Hello from home');
-});
+app.use('/api/auth/', routes);
 
 app.listen(AppConfig.port, () => {
     console.log(`Server running on port http://${AppConfig.host}:${AppConfig.port}`);
