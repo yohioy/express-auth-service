@@ -13,6 +13,9 @@ export class UsersModel {
     firstName: string;
 
     @Column()
+    email: string;
+
+    @Column()
     userStatus: string;
 
     @Column()

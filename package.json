@@ -4,15 +4,17 @@
   "private": true,
   "scripts": {
     "start": "node dist/index.js",
-    "start:debug": "nodemon src/index.ts"
+    "start:debug": "DEBUG=app* nodemon src/index.ts"
   },
   "dependencies": {
-    "@masteryo/masteryo-cognito": "^1.0.0",
-    "@masteryo/masteryo-token-generator": "^1.0.5",
+    "@masteryo/masteryo-cognito": "^1.0.2",
+    "@masteryo/masteryo-token-generator": "^1.0.9",
     "@masteryo/masteryo-utils": "^1.0.3",
+    "@types/cookie-parser": "^1.4.2",
     "amazon-cognito-identity-js": "^4.5.0",
     "aws-sdk": "^2.775.0",
     "config": "^3.3.2",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-mongo-sanitize": "^2.0.1",

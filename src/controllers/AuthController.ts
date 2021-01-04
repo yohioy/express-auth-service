@@ -1,12 +1,13 @@
 import { Response } from 'express';
-import config from 'config';
 import { responseType } from '@masteryo/masteryo-utils';
-import { TokenGenerator } from '@masteryo/masteryo-token-generator';
+import { decryptToken } from "../lib/tokenGenerator";
 
-type TTokenConfig = {
-    token_secret_key: string;
-    token_salt: string;
+type TDecryptTokenData = {
+    email: string;
+    token: string;
 }
+
+
 
 class AuthController {
 
@@ -21,20 +22,7 @@ class AuthController {
         let response;
         try {
             response = await cognito.authenticateUser(email, password);
-
-            const tokenConfig: TTokenConfig = config.get('TokenConfig');
-
-            const date = new Date();
-
-            const tokenOptions = {
-                secretKey: tokenConfig.token_secret_key,
-                salt: tokenConfig.token_salt,
-                passwordKey: response.accessToken,
-            };
-            const tokenGenerator = new TokenGenerator(tokenOptions);
-            const encryptedToken = await tokenGenerator.encryptToken(date);
-
-            req.auth = { cognitoId: response.sub, accessToken: encryptedToken };
+            req.auth = { cognitoId: response.sub, refreshToken: response.refreshToken };
             next();
         } catch (e) {
             console.log(e);
@@ -44,7 +32,7 @@ class AuthController {
 
 
 
-    async verifySignUp (req, res: Response, next) {
+    async confirmSignupVerification (req, res: Response, next) {
 
         const payload = req.body;
 
@@ -61,6 +49,35 @@ class AuthController {
             console.log(e);
             res.status(404).send(responseType.failed);
         }
+    }
+
+
+    async getNewToken (req, res: Response, next) {
+        const refreshToken = req.headers['x-refresh-token'];
+
+        if (!refreshToken) {
+            console.log('No Refresh Token', refreshToken);
+            return res.status(404).send(responseType.failed);
+        }
+
+        const decryptTokenData: TDecryptTokenData = await decryptToken(refreshToken);
+
+        const email = decryptTokenData.email;
+        const token = decryptTokenData.token;
+
+        const cognito = req.cognitoInstance;
+
+        //@todo - generate csrf token and send with the access token
+        let tokens;
+        try {
+            tokens = await cognito.renewToken(email, token);
+            res.header('token', tokens.accessToken);
+            res.status(200).send({ ...responseType.success });
+        } catch (e) {
+            console.log(e);
+            res.status(404).send(responseType.failed);
+        }
+
     }
 
 }

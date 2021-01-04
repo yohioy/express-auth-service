@@ -1,4 +1,5 @@
 import { createConnection, getConnection, ConnectionOptions, Connection, MongoEntityManager } from "typeorm";
+const debug = require('debug')('app:middleware:db-mongo');
 
 export const Db = (entities) => {
 
@@ -32,6 +33,7 @@ export const Db = (entities) => {
                 const mongoManager: MongoEntityManager = await existentConn.mongoManager;
                 req.dbManager = mongoManager;
             } else {
+                debug('Error', e);
                 console.log('Error', e);
             }
         }

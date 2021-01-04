@@ -8,10 +8,11 @@ import signUpVerificationValidation from '../validation/signUpVerificationValida
 const router = Router();
 
 router.post('/', signInValidation, authController.authenticate, userController.authenticate);
-router.patch('/verify-account', signUpVerificationValidation, authController.verifySignUp, authController.authenticate, userController.confirmVerification);
+router.patch('/verify-signup', signUpVerificationValidation, authController.confirmSignupVerification, authController.authenticate, userController.confirmSignupVerification);
+router.get('/newtoken', authController.getNewToken);
 
 router.get('/info', (req, res) => {
-    res.send('Hello from Auth Service');
+    res.status(200).send('Hello from Auth Service');
 });
 
 export default router;

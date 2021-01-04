@@ -4,6 +4,7 @@
     "port": "5022"
   },
   "TokenConfig": {
+    "token_signature_key": "elakola hodakola",
     "token_secret_key": "2pyS5u+fS1<P&GF",
     "token_salt": "z{Puwa6iqQVaC*"
   },

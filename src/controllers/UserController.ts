@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { responseType } from '@masteryo/masteryo-utils';
 import {Users} from "../shared/users";
-
+import { encryptToken } from "../lib/tokenGenerator";
 
 class UserController {
 
@@ -9,7 +9,7 @@ class UserController {
         const options = { dbManager: req.dbManager };
 
         const cognitoId = req.auth.cognitoId;
-        const accessToken = req.auth.accessToken;
+        const refreshToken = req.auth.refreshToken;
 
         let user = new Users(options);
 
@@ -20,8 +20,11 @@ class UserController {
             console.log(e);
         }
 
+        const token = await encryptToken(userData.email, refreshToken);
+
         if(userData) {
-            res.status(200).send({ ...responseType.success, ...{ token:accessToken } });
+            res.header('token', token);
+            res.status(200).send({ ...responseType.success });
         } else {
             console.log(`Cannot find user. Cognito ID: ${cognitoId}`);
             res.status(401).send(responseType.failed);
@@ -30,7 +33,7 @@ class UserController {
 
 
 
-    async confirmVerification(req, res: Response) {
+    async confirmSignupVerification(req, res: Response) {
 
         const options = { dbManager: req.dbManager };
         const cognitoId = req.auth.cognitoId;
@@ -45,6 +48,8 @@ class UserController {
             res.status(401).send(responseType.failed);
         }
     }
+
+
 
 }
 

@@ -10,11 +10,14 @@ import routes from './routes';
 import { Db } from './middleware/DbMongo';
 import { CognitoInit } from './middleware/Cognito';
 import { UsersModel } from './shared/users';
+import cookieParser from 'cookie-parser';
+
+const debug = require('debug')('app');
 
 type TAppConfig = {
     host: string;
     port: string;
-}
+};
 
 const AppConfig: TAppConfig = config.get('App');
 
@@ -40,5 +43,6 @@ app.use(CognitoInit());
 app.use('/api/auth/', routes);
 
 app.listen(AppConfig.port, () => {
+    debug(`Server running on port http://${AppConfig.host}:${AppConfig.port}`);
     console.log(`Server running on port http://${AppConfig.host}:${AppConfig.port}`);
 });
