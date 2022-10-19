@@ -9,7 +9,9 @@ class UserController {
         const options = { dbManager: req.dbManager };
 
         const cognitoId = req.auth.cognitoId;
+        const token = req.auth.token;
         const refreshToken = req.auth.refreshToken;
+        const email = req.auth.email;
 
         let user = new Users(options);
 
@@ -20,10 +22,12 @@ class UserController {
             console.log(e);
         }
 
-        const token = await encryptToken(userData.email, refreshToken);
-
         if(userData) {
-            res.header('token', token);
+            const encryptedRefreshToken = await encryptToken(email, refreshToken);
+            const encryptedToken = await encryptToken(email, token);
+
+            res.header('x-token', encryptedToken);
+            res.header('x-refresh-token', encryptedRefreshToken);
             res.status(200).send({ ...responseType.success });
         } else {
             console.log(`Cannot find user. Cognito ID: ${cognitoId}`);

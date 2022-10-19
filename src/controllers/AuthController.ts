@@ -22,7 +22,7 @@ class AuthController {
         let response;
         try {
             response = await cognito.authenticateUser(email, password);
-            req.auth = { cognitoId: response.sub, refreshToken: response.refreshToken };
+            req.auth = { cognitoId: response.sub, token: response.accessToken, refreshToken: response.refreshToken, email: email};
             next();
         } catch (e) {
             console.log(e);
@@ -71,12 +71,26 @@ class AuthController {
         let tokens;
         try {
             tokens = await cognito.renewToken(email, token);
+
             res.header('token', tokens.accessToken);
             res.status(200).send({ ...responseType.success });
         } catch (e) {
             console.log(e);
             res.status(404).send(responseType.failed);
         }
+
+    }
+
+
+    async verifyToken (req, res: Response, next) {
+        const token = req.headers['x-token'];
+        const refreshToken = req.headers['x-refresh-token'];
+
+        if (!token && !refreshToken) {
+            console.log(`Missing Tokens`);
+            return res.status(404).send(responseType.failed);
+        }
+
 
     }
 

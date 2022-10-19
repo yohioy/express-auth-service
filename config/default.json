@@ -4,13 +4,12 @@
     "port": "5022"
   },
   "TokenConfig": {
-    "token_signature_key": "elakola hodakola",
     "token_secret_key": "2pyS5u+fS1<P&GF",
     "token_salt": "z{Puwa6iqQVaC*"
   },
   "Cognito": {
-    "user_pool_id": "eu-west-1_E3otEFdhI",
-    "client_id": "5cmbrkcg2ticd06hmlm0r3l67g",
-    "region": "eu-west-1"
+    "user_pool_id": "eu-west-2_nA1bGuUxu",
+    "client_id": "6glmhrcfbnsjit8d3flhodsl1s",
+    "region": "eu-west-2"
   }
 }

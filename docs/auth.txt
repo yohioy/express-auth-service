@@ -1,0 +1,7 @@
+//@todo -
+
+1. signin
+authenticate
+send access token and refresh token
+store refresh token as a https only cookie
+store access token in state
